@@ -22,9 +22,11 @@
 /* Print Styles */
 @media print {
   body {
-    background: white !important;
-    color: #1a1a1a !important;
-    font-size: 12pt;
+    background: #0a0a0a !important;
+    color: #f1f5f9 !important;
+    font-size: 11pt;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   /* Hide UI elements */
@@ -42,60 +44,56 @@
     max-width: none !important;
   }
 
-  /* Reset dark surfaces for print */
-  .bg-dark-surface, .bg-dark-elevated, .bg-black\/40 {
-    background: white !important;
-    border-color: #eee !important;
-    color: #1a1a1a !important;
+  /* Keep dark elements dark in print */
+  .bg-dark-surface, .bg-dark-elevated, .bg-black {
+    background: #0a0a0a !important;
+    color: white !important;
+  }
+
+  .bg-black\/40 {
+    background: rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .bg-gray-50 {
+    background: #111111 !important;
+    color: white !important;
   }
 
   .text-white, .text-neutral-100 {
-    color: #1a1a1a !important;
+    color: white !important;
   }
   
   .text-brand-primary {
     color: #d97706 !important;
   }
 
-  .border-white\/5, .border-dark-border {
-    border-color: #eee !important;
+  .text-gray-700, .text-gray-800, .text-gray-500 {
+    color: #94a3b8 !important;
+  }
+
+  .border-white\/5, .border-dark-border, .border-gray-200 {
+    border-color: rgba(255, 255, 255, 0.1) !important;
   }
 
   .bg-white\/5 {
-    background: #f9f9f9 !important;
-  }
-
-  .rounded-2xl, .rounded-xl {
-    border-radius: 4px !important;
-    border-width: 1px !important;
-  }
-
-  .shadow-lg, .shadow-2xl {
-    box-shadow: none !important;
+    background: rgba(255, 255, 255, 0.05) !important;
   }
 
   /* Proposal specific formatting */
   .proposal-page {
     page-break-after: always;
-    padding: 2cm;
+    padding: 1.5cm;
+    background: #0a0a0a !important;
   }
 
   .proposal-header {
-    margin-bottom: 2cm;
+    margin-bottom: 1.5cm;
     border-bottom: 2px solid #d97706;
-    padding-bottom: 1cm;
+    padding-bottom: 0.5cm;
   }
 
   .print-only {
     display: block !important;
-  }
-
-  .grid {
-    display: block !important;
-  }
-
-  .grid > * {
-    margin-bottom: 1cm;
   }
 }
 

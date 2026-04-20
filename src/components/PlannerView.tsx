@@ -32,66 +32,69 @@ export default function PlannerView({ params, setParams, result }: PlannerViewPr
       </header>
 
       {/* Professional Proposal for Printing */}
-      <div className="print-only proposal-page">
+      <div className="print-only proposal-page text-white">
         <div className="proposal-header text-center">
-          <h1 className="text-4xl font-serif italic text-black mb-2">PROPOSTA DE PLANEJAMENTO ESTRATÉGICO</h1>
-          <p className="text-gray-500 uppercase tracking-[0.3em] text-xs">Preparado exclusivamente para você</p>
+          <h1 className="text-4xl font-serif italic text-white mb-2">PROPOSTA DE PLANEJAMENTO ESTRATÉGICO</h1>
+          <p className="text-white/40 uppercase tracking-[0.3em] text-[10px]">Consultoria Exclusiva de Patrimônio</p>
         </div>
 
         <div className="mb-12">
-          <h2 className="text-2xl font-serif italic mb-6 border-b border-brand-primary pb-2">Por que este planejamento é sua melhor escolha?</h2>
-        <div className="grid grid-cols-2 gap-8 text-black mb-12">
+          <h2 className="text-2xl font-serif italic mb-6 border-b border-brand-primary/50 pb-2">Por que este planejamento é sua melhor escolha?</h2>
+          <div className="grid grid-cols-2 gap-8">
             <div className="space-y-4">
               <p className="font-serif italic text-lg text-brand-primary">O Poder da Composição de Lances</p>
-              <p className="text-sm leading-relaxed text-gray-700">
+              <p className="text-sm leading-relaxed text-white/60">
                 Sua estratégia utiliza o **Lance Embutido**, permitindo que você use parte do próprio crédito contratado para potencializar suas chances de contemplação.
               </p>
-              <div className="bg-gray-100 p-4 rounded border-l-4 border-brand-primary">
-                <p className="text-xs uppercase text-gray-500 font-bold mb-2">Composição do Lance Total</p>
+              <div className="bg-white/5 p-4 rounded border-l-4 border-brand-primary">
+                <p className="text-[10px] uppercase text-white/40 font-bold mb-2 tracking-widest">Composição do Lance Total</p>
                 <div className="flex justify-between text-sm mb-1">
                   <span>Recurso Próprio (Seu Bolso):</span>
-                  <span className="font-bold">{formatCurrency(params.ownResources)}</span>
+                  <span className="font-serif italic">{formatCurrency(params.ownResources)}</span>
                 </div>
                 <div className="flex justify-between text-sm mb-1">
                   <span>Lance Embutido ({params.embeddedBidPercent}%):</span>
-                  <span className="font-bold">{formatCurrency(result.embeddedBidValue)}</span>
+                  <span className="font-serif italic">{formatCurrency(result.embeddedBidValue)}</span>
                 </div>
-                <div className="flex justify-between text-md font-bold border-t border-gray-300 pt-2 mt-2">
-                  <span>LANCE FINAL PARA SORTEIO:</span>
-                  <span className="text-brand-primary">{formatCurrency(params.ownResources + result.embeddedBidValue)}</span>
+                <div className="flex justify-between text-md font-bold border-t border-white/10 pt-2 mt-2">
+                  <span className="text-[10px] uppercase tracking-widest">LANCE FINAL PARA SORTEIO:</span>
+                  <span className="text-brand-primary text-xl font-serif italic">{formatCurrency(params.ownResources + result.embeddedBidValue)}</span>
                 </div>
               </div>
             </div>
             <div className="space-y-4">
-              <p className="font-serif italic text-lg text-brand-primary">Liberdade de Escolha</p>
-              <p className="text-sm leading-relaxed text-gray-700">
-                Este planejamento foi desenhado para que você tenha o **poder de compra à vista** no momento da contemplação, garantindo melhores negociações e descontos reais no imóvel ou veículo, enquanto seus concorrentes estão presos às taxas variáveis dos bancos.
+              <p className="font-serif italic text-lg text-brand-primary">Diferencial do Redutor de Parcela</p>
+              <p className="text-sm leading-relaxed text-white/60">
+                Configuramos o seu plano com um **Redutor de {params.redutor}%**. Isso significa que, até o momento da sua contemplação, você paga uma parcela significativamente menor, protegendo o seu fluxo de caixa mensal.
               </p>
-              <p className="text-xs text-gray-400 italic">
-                * Proposta sujeita a análise de crédito e disponibilidade de grupo.
-              </p>
+              <div className="bg-brand-primary/10 p-4 rounded border border-brand-primary/20">
+                <p className="text-[10px] uppercase text-brand-primary font-bold mb-2 tracking-widest">Vantagem do Redutor</p>
+                <p className="text-xs leading-relaxed italic text-white/80">
+                  "O redutor permite que você inicie seu projeto de investimento com o fôlego financeiro necessário, mantendo seu padrão de vida enquanto sua carta de crédito trabalha para você."
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-12 mb-12">
-          <div className="bg-gray-50 p-8 border border-gray-200">
-            <h3 className="text-xl font-serif italic mb-6">Detalhamento do Plano</h3>
+          <div className="bg-white/5 p-8 border border-white/10 rounded-2xl">
+            <h3 className="text-xl font-serif italic mb-6 text-brand-primary">Detalhamento do Plano</h3>
             <div className="space-y-4">
-              <div className="flex justify-between border-b pb-2">
-                <span className="text-xs uppercase text-gray-500">Valor do Crédito</span>
+              <div className="flex justify-between border-b border-white/10 pb-2">
+                <span className="text-[10px] uppercase text-white/40 tracking-widest">Valor do Crédito</span>
                 <span className="font-serif italic text-lg">{formatCurrency(params.credit)}</span>
               </div>
-              <div className="flex justify-between border-b pb-2">
-                <span className="text-xs uppercase text-gray-500">Prazo Total</span>
+              <div className="flex justify-between border-b border-white/10 pb-2">
+                <span className="text-[10px] uppercase text-white/40 tracking-widest">Prazo Total</span>
                 <span className="font-serif italic text-lg">{params.terms} meses</span>
               </div>
-              <div className="flex justify-between border-b pb-2">
-                <span className="text-xs uppercase text-gray-500">Parcela Inicial</span>
+              <div className="flex justify-between border-b border-white/10 pb-2">
+                <span className="text-[10px] uppercase text-white/40 tracking-widest">Parcela com Redutor</span>
                 <span className="font-serif italic text-lg text-brand-primary font-bold">{formatCurrency(result.totalInstallment)}</span>
               </div>
-              <div className="flex justify-between border-b pb-2">
-                <span className="text-xs uppercase text-gray-500">Taxa Adm + Res.</span>
+              <div className="flex justify-between border-b border-white/10 pb-2">
+                <span className="text-[10px] uppercase text-white/40 tracking-widest">Taxa Adm + Res.</span>
                 <span className="font-serif italic text-lg">{(params.admFee + params.reserveFund).toFixed(2)}%</span>
               </div>
             </div>
@@ -99,23 +102,23 @@ export default function PlannerView({ params, setParams, result }: PlannerViewPr
 
           <div className="flex flex-col justify-center space-y-6">
             <div className="border-l-4 border-brand-primary pl-6 py-2">
-              <p className="text-[10px] uppercase text-gray-500 tracking-widest">Expectativa de Contemplação</p>
-              <p className="text-lg text-gray-800 leading-tight">
+              <p className="text-[10px] uppercase text-white/40 tracking-widest mb-1">Expectativa de Contemplação</p>
+              <p className="text-lg text-white/80 font-serif italic leading-tight">
                 Utilizando o lance embutido de <strong>{params.embeddedBidPercent}%</strong>, você maximiza suas chances mensais sem precisar desembolsar todo o valor do seu bolso.
               </p>
             </div>
             <div className="border-l-4 border-brand-primary pl-6 py-2">
-              <p className="text-[10px] uppercase text-gray-500 tracking-widest">Resultado Pós-Contemplação</p>
-              <p className="text-lg text-gray-800 leading-tight">
+              <p className="text-[10px] uppercase text-white/40 tracking-widest mb-1">Resultado Pós-Contemplação</p>
+              <p className="text-lg text-white/80 font-serif italic leading-tight">
                 Sua parcela será recalculada para aproximadamente <strong>{formatCurrency(result.newInstallmentAfterBid)}</strong>, mantendo sua saúde financeira intacta.
               </p>
             </div>
           </div>
         </div>
 
-        <div className="text-center mt-20 p-12 bg-black text-white">
-          <p className="text-2xl font-serif italic mb-4">"A melhor forma de prever o futuro é criá-lo."</p>
-          <p className="text-xs uppercase tracking-widest opacity-60">Vamos garantir seu patrimônio hoje?</p>
+        <div className="text-center mt-12 p-12 bg-white/5 border border-white/10 rounded-3xl">
+          <p className="text-2xl font-serif italic mb-4 text-brand-primary">"A melhor forma de prever o futuro é criá-lo."</p>
+          <p className="text-[10px] uppercase tracking-[0.4em] opacity-40">Vamos garantir seu patrimônio hoje?</p>
         </div>
       </div>
 
