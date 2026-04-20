@@ -153,7 +153,7 @@ export default function ComparisonView({
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-brand-primary shadow-lg shadow-brand-primary/20" />
-                  <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Plano Elite Consórcio</span>
+                  <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Plano VM Seguros & Consórcio</span>
                 </div>
                 <div className="space-y-1">
                   <p className="text-2xl font-serif italic text-white">{formatCurrency(consorcioResult.totalPaid)}</p>

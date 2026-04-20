@@ -23,6 +23,7 @@ import { cn } from './lib/utils';
 type View = 'planner' | 'comparison';
 
 const DEFAULT_CONSORCIO: ConsorcioParams = {
+  clientName: '',
   credit: 112500,
   terms: 80,
   admFee: 18,
@@ -64,7 +65,7 @@ export default function App() {
               <CalcIcon className="text-white w-6 h-6" />
             </div>
             <div>
-              <h1 className="font-serif italic text-xl text-white tracking-wide leading-tight">ELITE</h1>
+              <h1 className="font-serif italic text-lg text-white tracking-tight leading-tight">VM SEGUROS & CONSORCIO</h1>
               <p className="text-[10px] uppercase tracking-[0.2em] text-brand-primary/80 font-bold">Consórcio Planner</p>
             </div>
           </div>

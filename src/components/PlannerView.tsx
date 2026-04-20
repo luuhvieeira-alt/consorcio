@@ -26,16 +26,36 @@ export default function PlannerView({ params, setParams, result }: PlannerViewPr
   return (
     <div className="space-y-8 pb-12">
       {/* Proposal Header for Normal Display */}
-      <header className="no-print">
-        <h2 className="text-3xl font-serif italic text-white tracking-tight">Simulador de Consórcio</h2>
-        <p className="text-white/40 mt-1">Configure o plano ideal para o seu cliente.</p>
+      <header className="no-print space-y-6">
+        <div>
+          <h2 className="text-3xl font-serif italic text-white tracking-tight">Simulador de Consórcio</h2>
+          <p className="text-white/40 mt-1">Configure o plano ideal para o seu cliente.</p>
+        </div>
+        
+        <div className="max-w-md space-y-2">
+          <label className="text-[10px] uppercase tracking-widest text-brand-primary font-bold mb-2 block">NOME DO CLIENTE</label>
+          <input 
+            type="text"
+            placeholder="Digite o nome para personalizar a proposta PDF..."
+            value={params.clientName}
+            onChange={(e) => setParams(prev => ({ ...prev, clientName: e.target.value }))}
+            className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-6 text-white focus:outline-none focus:border-brand-primary transition-all font-sans text-lg italic"
+          />
+        </div>
       </header>
 
       {/* Professional Proposal for Printing */}
       <div className="print-only proposal-page text-white">
         <div className="proposal-header text-center">
-          <h1 className="text-4xl font-serif italic text-white mb-2">PROPOSTA DE PLANEJAMENTO ESTRATÉGICO</h1>
-          <p className="text-white/40 uppercase tracking-[0.3em] text-[10px]">Consultoria Exclusiva de Patrimônio</p>
+          <h1 className="text-3xl font-serif italic text-white mb-2 tracking-wider">VM SEGUROS & CONSORCIO</h1>
+          <p className="text-brand-primary uppercase tracking-[0.4em] text-[10px] font-bold mb-6">Planejamento Estratégico de Patrimônio</p>
+          {params.clientName && (
+            <div className="inline-block px-6 py-2 border border-brand-primary/30 bg-brand-primary/5 rounded-full">
+              <p className="text-xs uppercase tracking-[0.2em] text-white/60">
+                Preparado especialmente para: <span className="text-white font-bold">{params.clientName}</span>
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="mb-12">

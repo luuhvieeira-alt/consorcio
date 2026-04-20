@@ -1,4 +1,5 @@
 export interface ConsorcioParams {
+  clientName: string;
   credit: number;
   terms: number;
   admFee: number;
