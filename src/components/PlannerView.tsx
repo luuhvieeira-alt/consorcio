@@ -176,6 +176,59 @@ export default function PlannerView({ params, setParams, result }: PlannerViewPr
           </div>
         </div>
 
+        <div className="grid grid-cols-1 mb-12">
+          <div className="bg-white/5 border border-white/10 p-8 rounded-3xl">
+            <h3 className="text-2xl font-serif italic mb-6 text-brand-primary border-b border-brand-primary/20 pb-4">
+              Estimativa Pós-Contemplação
+            </h3>
+            <div className="grid grid-cols-2 gap-12">
+              <div className="space-y-6">
+                <div className="flex justify-between items-center border-b border-white/10 pb-3">
+                  <span className="text-[10px] uppercase text-white/40 tracking-widest">Mês da Contemplação</span>
+                  <span className="text-xl font-serif italic">{params.contemplationMonth}ª parcela</span>
+                </div>
+                <div className="flex justify-between items-center border-b border-white/10 pb-3">
+                  <span className="text-[10px] uppercase text-white/40 tracking-widest">Crédito Disponível</span>
+                  <span className="text-xl font-serif italic text-brand-secondary font-bold">{formatCurrency(result.effectiveCredit)}</span>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 gap-6">
+                <div className="bg-brand-primary/5 p-6 rounded-2xl border border-brand-primary/20">
+                  <p className="text-[10px] uppercase text-brand-primary font-bold tracking-widest mb-4">OPÇÃO 1: Reduzir Valor da Mensalidade</p>
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <p className="text-[10px] text-white/40 uppercase mb-1">Nova Parcela</p>
+                      <p className="text-2xl font-serif italic text-white">{formatCurrency(result.installmentReductions.reduceValue.newInstallment)}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] text-white/40 uppercase mb-1">Prazo Restante</p>
+                      <p className="text-lg font-serif italic text-white/60">{result.installmentReductions.reduceValue.remainingTerms} meses</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
+                  <p className="text-[10px] uppercase text-white/60 font-bold tracking-widest mb-4">OPÇÃO 2: Reduzir Prazo (Manter Parcela)</p>
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <p className="text-[10px] text-white/40 uppercase mb-1">Parcela Integral</p>
+                      <p className="text-2xl font-serif italic text-white">{formatCurrency(result.installmentReductions.reduceTerm.newInstallment)}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] text-white/40 uppercase mb-1">Novo Prazo Total</p>
+                      <p className="text-lg font-serif italic text-brand-primary font-bold">{result.installmentReductions.reduceTerm.remainingTerms} meses</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p className="text-[10px] text-white/30 italic mt-8 text-center uppercase tracking-widest">
+              * Valores baseados na configuração atual do plano e sujeitos a alterações de taxa e seguro.
+            </p>
+          </div>
+        </div>
+
         <div className="text-center mt-12 p-12 bg-white/5 border border-white/10 rounded-3xl">
           <p className="text-2xl font-serif italic mb-4 text-brand-primary">"A melhor forma de prever o futuro é criá-lo."</p>
           <p className="text-[10px] uppercase tracking-[0.4em] opacity-40">Vamos garantir seu patrimônio hoje?</p>
@@ -254,6 +307,11 @@ export default function PlannerView({ params, setParams, result }: PlannerViewPr
                 type="percent"
                 step={0.01}
               />
+              <InputField 
+                label="Contemplação (Mês)" 
+                value={params.contemplationMonth} 
+                onChange={(v) => handleChange('contemplationMonth', v)} 
+              />
             </div>
             <div className="px-6 pb-6 pt-2">
               <div className="p-3 bg-brand-primary/5 border border-brand-primary/20 rounded-xl flex items-center justify-between">
@@ -283,17 +341,17 @@ export default function PlannerView({ params, setParams, result }: PlannerViewPr
           </div>
 
           <div className="bg-dark-elevated rounded-2xl border border-white/5 p-6 space-y-6">
-            <div>
+            <div className="space-y-4">
               <h4 className="text-xs font-bold text-neutral-500 uppercase tracking-widest mb-4">Análise Financeira</h4>
               <div className="space-y-4">
                 <div className="p-4 bg-black/40 rounded-xl border border-white/5">
-                  <p className="text-[10px] text-white/40 uppercase tracking-widest mb-1">Total a Pagar</p>
-                  <p className="text-xl font-serif italic text-white">{formatCurrency(result.totalPaid)}</p>
+                  <p className="text-[10px] text-white/40 uppercase tracking-widest mb-1">Total da Dívida (Crédito + Taxas)</p>
+                  <p className="text-xl font-serif italic text-white">{formatCurrency(result.totalDebt)}</p>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="p-4 bg-black/40 rounded-xl border border-white/5">
-                    <p className="text-[10px] text-white/40 uppercase tracking-widest mb-1">Custo Total (%)</p>
+                    <p className="text-[10px] text-white/40 uppercase tracking-widest mb-1">Custo Administrativo</p>
                     <p className="text-sm font-serif italic text-white">{(params.admFee + params.reserveFund).toFixed(2)}%</p>
                   </div>
                   <div className="p-4 bg-black/40 rounded-xl border border-white/5">
@@ -331,6 +389,19 @@ export default function PlannerView({ params, setParams, result }: PlannerViewPr
             </div>
 
             <div className="pt-6 border-t border-white/5">
+              <div className="bg-black/40 p-4 rounded-xl border border-white/5 mb-6">
+                <h5 className="text-[10px] font-bold text-brand-primary uppercase tracking-widest mb-3">Pós-Contemplação (Est.)</h5>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-white/40">Nova Parcela:</span>
+                    <span className="text-white font-serif italic">{formatCurrency(result.installmentReductions.reduceValue.newInstallment)}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-white/40">Ou Reduzir para:</span>
+                    <span className="text-brand-secondary font-serif italic">{result.installmentReductions.reduceTerm.remainingTerms} meses</span>
+                  </div>
+                </div>
+              </div>
               <button 
                 onClick={() => window.print()}
                 className="w-full bg-brand-primary text-black text-xs font-bold py-4 rounded-xl hover:bg-brand-secondary transition-all uppercase tracking-widest shadow-lg shadow-brand-primary/20 flex items-center justify-center gap-2"

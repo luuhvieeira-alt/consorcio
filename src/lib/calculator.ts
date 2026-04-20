@@ -8,6 +8,7 @@ export interface ConsorcioParams {
   embeddedBidPercent: number; // percentage of credit
   redutor: number; // % reduction in installment
   targetRepresentativenessPercent: number; // New: threshold for winning in a group
+  contemplationMonth: number; // month of contemplation for estimation
 }
 
 export interface FinancingParams {
@@ -31,6 +32,21 @@ export interface ConsorcioResult {
   bidRepresentativeness: number;
   requiredTotalBidValue: number;
   missingOwnResourcesValue: number;
+  // Post-contemplation fields
+  fullBaseInstallment: number;
+  remainingTerms: number;
+  balanceAtContemplation: number;
+  balanceAfterBid: number;
+  installmentReductions: {
+    reduceValue: {
+      newInstallment: number;
+      remainingTerms: number;
+    };
+    reduceTerm: {
+      newInstallment: number;
+      remainingTerms: number;
+    };
+  };
 }
 
 export interface FinancingResult {
@@ -40,16 +56,25 @@ export interface FinancingResult {
 }
 
 export function calculateConsorcio(params: ConsorcioParams): ConsorcioResult {
-  const { credit, terms, admFee, reserveFund, insurance, ownResources, embeddedBidPercent, redutor, targetRepresentativenessPercent } = params;
+  const { 
+    credit, terms, admFee, reserveFund, insurance, 
+    ownResources, embeddedBidPercent, redutor, 
+    targetRepresentativenessPercent, contemplationMonth 
+  } = params;
 
   const totalAdminFee = (credit * (admFee / 100));
   const totalReserveFund = (credit * (reserveFund / 100));
   
   const totalDebt = credit + totalAdminFee + totalReserveFund;
-  const baseInstallment = (totalDebt * (1 - redutor / 100)) / terms;
+  
+  // Porto logic: Full installment (Integral) is baseline for everything
+  const fullBaseInstallment = totalDebt / terms;
+  const reducedBaseInstallment = fullBaseInstallment * (1 - redutor / 100);
 
   const insuranceValue = credit * (insurance / 100);
-  const totalInstallment = baseInstallment + insuranceValue;
+  
+  // Installment while under redutor
+  const currentTotalInstallment = reducedBaseInstallment + insuranceValue;
   
   // After bid
   const embeddedBidValue = credit * (embeddedBidPercent / 100);
@@ -63,26 +88,52 @@ export function calculateConsorcio(params: ConsorcioParams): ConsorcioResult {
   const requiredTotalBidValue = totalDebt * (targetRepresentativenessPercent / 100);
   const missingOwnResourcesValue = Math.max(0, requiredTotalBidValue - embeddedBidValue - ownResources);
   
-  // Porto usually reduces the balance with the bid
-  const remainingBalance = totalDebt - lanceTotal;
-  // If reducing installment value:
-  const newInstallmentAfterBid = (remainingBalance / terms) + insuranceValue;
+  // Post-Contemplation Logic
+  // Approximation of balance at contemplation: 
+  // We pay (reducedBaseInstallment) each month. 
+  // Remaining Balance = TotalDebt - (Months * reducedBaseInstallment)
+  const balanceAtContemplation = Math.max(0, totalDebt - (contemplationMonth * reducedBaseInstallment));
+  const balanceAfterBid = Math.max(0, balanceAtContemplation - lanceTotal);
+  const remainingTermsAtContemplation = Math.max(1, terms - contemplationMonth);
+
+  // Scenario 1: Reduce Value
+  // After contemplation, redutor often ends, but if we choose to reduce value, 
+  // we divide balance by the remaining months.
+  const newInstallmentValueOnly = balanceAfterBid / remainingTermsAtContemplation;
+  
+  // Scenario 2: Reduce Term
+  // Balance remains divided by the FULL integral installment value to find how many months are left.
+  const newRemainingTermsOnly = Math.ceil(balanceAfterBid / fullBaseInstallment);
 
   return {
     totalAdminFee,
     totalReserveFund,
-    baseInstallment,
+    baseInstallment: reducedBaseInstallment,
     insuranceValue,
-    totalInstallment,
+    totalInstallment: currentTotalInstallment,
     totalDebt,
     totalPaid: totalDebt + (insuranceValue * terms),
     effectiveCredit,
     embeddedBidValue,
-    remainingBalanceAfterBid: remainingBalance,
-    newInstallmentAfterBid,
+    remainingBalanceAfterBid: balanceAfterBid,
+    newInstallmentAfterBid: newInstallmentValueOnly + insuranceValue,
     bidRepresentativeness,
     requiredTotalBidValue,
     missingOwnResourcesValue,
+    fullBaseInstallment: fullBaseInstallment + insuranceValue,
+    remainingTerms: remainingTermsAtContemplation,
+    balanceAtContemplation,
+    balanceAfterBid,
+    installmentReductions: {
+      reduceValue: {
+        newInstallment: newInstallmentValueOnly + insuranceValue,
+        remainingTerms: remainingTermsAtContemplation
+      },
+      reduceTerm: {
+        newInstallment: fullBaseInstallment + insuranceValue,
+        remainingTerms: newRemainingTermsOnly
+      }
+    }
   };
 }
 

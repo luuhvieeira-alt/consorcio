@@ -32,6 +32,7 @@ const DEFAULT_CONSORCIO: ConsorcioParams = {
   embeddedBidPercent: 30, // 30% representing approx 33750
   redutor: 45,
   targetRepresentativenessPercent: 52.60,
+  contemplationMonth: 8,
 };
 
 const DEFAULT_FINANCING: FinancingParams = {
@@ -66,6 +67,11 @@ export default function App() {
               <h1 className="font-serif italic text-xl text-white tracking-wide leading-tight">ELITE</h1>
               <p className="text-[10px] uppercase tracking-[0.2em] text-brand-primary/80 font-bold">Consórcio Planner</p>
             </div>
+          </div>
+          <div className="flex gap-2 mt-6">
+             <span className="text-[9px] px-2 py-0.5 rounded bg-brand-primary/20 text-brand-primary font-bold uppercase tracking-widest border border-brand-primary/30">Auto</span>
+             <span className="text-[9px] px-2 py-0.5 rounded bg-white/5 text-white/40 font-bold uppercase tracking-widest border border-white/5">Imóvel</span>
+             <span className="text-[9px] px-2 py-0.5 rounded bg-white/5 text-white/40 font-bold uppercase tracking-widest border border-white/5">Pesados</span>
           </div>
         </div>
 
