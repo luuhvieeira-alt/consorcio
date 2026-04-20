@@ -31,6 +31,7 @@ const DEFAULT_CONSORCIO: ConsorcioParams = {
   ownResources: 30000,
   embeddedBidPercent: 30, // 30% representing approx 33750
   redutor: 45,
+  targetRepresentativenessPercent: 52.60,
 };
 
 const DEFAULT_FINANCING: FinancingParams = {

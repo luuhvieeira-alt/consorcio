@@ -47,7 +47,7 @@ export default function PlannerView({ params, setParams, result }: PlannerViewPr
                 Sua estratégia utiliza o **Lance Embutido**, permitindo que você use parte do próprio crédito contratado para potencializar suas chances de contemplação.
               </p>
               <div className="bg-white/5 p-4 rounded border-l-4 border-brand-primary">
-                <p className="text-[10px] uppercase text-white/40 font-bold mb-2 tracking-widest">Composição do Lance Total</p>
+                <p className="text-[10px] uppercase text-white/40 font-bold mb-2 tracking-widest">Composição e Representatividade</p>
                 <div className="flex justify-between text-sm mb-1">
                   <span>Recurso Próprio (Seu Bolso):</span>
                   <span className="font-serif italic">{formatCurrency(params.ownResources)}</span>
@@ -56,6 +56,27 @@ export default function PlannerView({ params, setParams, result }: PlannerViewPr
                   <span>Lance Embutido ({params.embeddedBidPercent}%):</span>
                   <span className="font-serif italic">{formatCurrency(result.embeddedBidValue)}</span>
                 </div>
+                <div className="flex justify-between text-sm mb-1 text-brand-primary font-bold">
+                  <span>Representatividade Real do Lance:</span>
+                  <span>{result.bidRepresentativeness.toFixed(2)}%</span>
+                </div>
+                {params.targetRepresentativenessPercent > 0 && (
+                  <div className="mt-4 pt-4 border-t border-white/10 space-y-3">
+                    <div className="flex justify-between items-center bg-brand-primary/10 p-3 rounded-lg border border-brand-primary/20">
+                      <div>
+                        <p className="text-[10px] uppercase text-brand-primary font-bold tracking-widest">Meta do Grupo</p>
+                        <p className="text-xl font-serif italic">{params.targetRepresentativenessPercent.toFixed(2)}%</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[10px] uppercase text-white/40 tracking-widest">Investimento Adicional</p>
+                        <p className="text-xl font-serif italic text-brand-secondary">{formatCurrency(result.missingOwnResourcesValue)}</p>
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-white/60 leading-relaxed italic">
+                      * Para atingir a meta de contemplação deste grupo, seu aporte adicional necessário seria de {formatCurrency(result.missingOwnResourcesValue)}.
+                    </p>
+                  </div>
+                )}
                 <div className="flex justify-between text-md font-bold border-t border-white/10 pt-2 mt-2">
                   <span className="text-[10px] uppercase tracking-widest">LANCE FINAL PARA SORTEIO:</span>
                   <span className="text-brand-primary text-xl font-serif italic">{formatCurrency(params.ownResources + result.embeddedBidValue)}</span>
@@ -112,6 +133,45 @@ export default function PlannerView({ params, setParams, result }: PlannerViewPr
               <p className="text-lg text-white/80 font-serif italic leading-tight">
                 Sua parcela será recalculada para aproximadamente <strong>{formatCurrency(result.newInstallmentAfterBid)}</strong>, mantendo sua saúde financeira intacta.
               </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 mb-12">
+          <div className="bg-brand-primary/10 border-2 border-brand-primary/30 p-8 rounded-3xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <Zap className="w-32 h-32 text-brand-primary" />
+            </div>
+            <h3 className="text-2xl font-serif italic mb-4 text-brand-primary flex items-center gap-3">
+              <ShieldCheck className="w-6 h-6" />
+              Estratégia Vencedora para Contemplação
+            </h3>
+            <div className="grid grid-cols-2 gap-8 items-center">
+              <div className="space-y-4">
+                <p className="text-sm leading-relaxed text-white/80">
+                  Para garantir sua posição no grupo e maximizar a probabilidade de contemplação imediata, identificamos que a **Meta de Representatividade** ideal é de **{params.targetRepresentativenessPercent.toFixed(2)}%**.
+                </p>
+                <div className="flex items-center gap-4">
+                  <div className="flex-1 h-3 bg-white/10 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-brand-primary shadow-[0_0_15px_rgba(217,119,6,0.5)]" 
+                      style={{ width: `${Math.min(100, (result.bidRepresentativeness / params.targetRepresentativenessPercent) * 100)}%` }}
+                    />
+                  </div>
+                  <span className="text-xs font-mono">{result.bidRepresentativeness.toFixed(1)}% / {params.targetRepresentativenessPercent.toFixed(1)}%</span>
+                </div>
+              </div>
+              <div className="bg-black/60 p-6 rounded-2xl border border-brand-primary/20 backdrop-blur-sm">
+                <p className="text-[10px] uppercase text-brand-primary font-bold tracking-widest mb-2">Aporte Final Necessário</p>
+                <p className="text-4xl font-serif italic text-white mb-1">
+                  {result.missingOwnResourcesValue > 0 ? formatCurrency(result.missingOwnResourcesValue) : "META ATINGIDA"}
+                </p>
+                <p className="text-[10px] text-white/40 italic">
+                  {result.missingOwnResourcesValue > 0 
+                    ? "* Valor adicional sugerido para alcançar a representatividade ideal do grupo." 
+                    : "* Seu planejamento atual já atende aos critérios de alta performance do grupo."}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -187,6 +247,13 @@ export default function PlannerView({ params, setParams, result }: PlannerViewPr
                 onChange={(v) => handleChange('embeddedBidPercent', v)} 
                 type="percent"
               />
+              <InputField 
+                label="Meta de Representatividade (%)" 
+                value={params.targetRepresentativenessPercent} 
+                onChange={(v) => handleChange('targetRepresentativenessPercent', v)} 
+                type="percent"
+                step={0.01}
+              />
             </div>
             <div className="px-6 pb-6 pt-2">
               <div className="p-3 bg-brand-primary/5 border border-brand-primary/20 rounded-xl flex items-center justify-between">
@@ -245,11 +312,17 @@ export default function PlannerView({ params, setParams, result }: PlannerViewPr
                   <span className="text-white font-serif italic">{formatCurrency(params.ownResources + result.embeddedBidValue)}</span>
                 </div>
                 <div className="flex justify-between items-center text-[10px]">
-                  <span className="text-white/20 uppercase tracking-widest">Percentual do Lance</span>
-                  <span className="text-brand-primary/60 font-serif italic">
-                    {((params.ownResources + result.embeddedBidValue) / params.credit * 100).toFixed(2)}%
+                  <span className="text-white/20 uppercase tracking-widest">Representatividade do Lance</span>
+                  <span className="text-brand-primary font-serif italic font-bold">
+                    {result.bidRepresentativeness.toFixed(2)}%
                   </span>
                 </div>
+                {result.missingOwnResourcesValue > 0 && (
+                  <div className="bg-brand-primary/10 p-3 rounded-xl border border-brand-primary/20 mt-3">
+                    <p className="text-[10px] text-brand-primary font-bold uppercase tracking-widest mb-1">Diferença para Meta ({params.targetRepresentativenessPercent}%):</p>
+                    <p className="text-lg font-serif italic text-white">{formatCurrency(result.missingOwnResourcesValue)}</p>
+                  </div>
+                )}
                 <div className="flex justify-between items-center text-sm pt-2 border-t border-white/5 mt-2">
                   <span className="text-white/60 font-medium font-serif italic">Crédito Líquido</span>
                   <span className="text-brand-secondary font-serif italic text-lg">{formatCurrency(result.effectiveCredit)}</span>

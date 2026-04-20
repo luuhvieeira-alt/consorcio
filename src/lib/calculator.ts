@@ -7,6 +7,7 @@ export interface ConsorcioParams {
   ownResources: number;
   embeddedBidPercent: number; // percentage of credit
   redutor: number; // % reduction in installment
+  targetRepresentativenessPercent: number; // New: threshold for winning in a group
 }
 
 export interface FinancingParams {
@@ -27,6 +28,9 @@ export interface ConsorcioResult {
   embeddedBidValue: number;
   remainingBalanceAfterBid: number;
   newInstallmentAfterBid: number;
+  bidRepresentativeness: number;
+  requiredTotalBidValue: number;
+  missingOwnResourcesValue: number;
 }
 
 export interface FinancingResult {
@@ -36,23 +40,28 @@ export interface FinancingResult {
 }
 
 export function calculateConsorcio(params: ConsorcioParams): ConsorcioResult {
-  const { credit, terms, admFee, reserveFund, insurance, ownResources, embeddedBidPercent, redutor } = params;
+  const { credit, terms, admFee, reserveFund, insurance, ownResources, embeddedBidPercent, redutor, targetRepresentativenessPercent } = params;
 
   const totalAdminFee = (credit * (admFee / 100));
   const totalReserveFund = (credit * (reserveFund / 100));
   
-  const totalDebtWithFees = credit + totalAdminFee + totalReserveFund;
-  const baseInstallment = (totalDebtWithFees * (1 - redutor / 100)) / terms;
+  const totalDebt = credit + totalAdminFee + totalReserveFund;
+  const baseInstallment = (totalDebt * (1 - redutor / 100)) / terms;
 
   const insuranceValue = credit * (insurance / 100);
   const totalInstallment = baseInstallment + insuranceValue;
   
-  const totalDebt = credit + totalAdminFee + totalReserveFund;
-  
   // After bid
   const embeddedBidValue = credit * (embeddedBidPercent / 100);
-  const effectiveCredit = credit - embeddedBidValue;
   const lanceTotal = ownResources + embeddedBidValue;
+  const effectiveCredit = credit - embeddedBidValue;
+  
+  // Bid representativeness calculation (Lance Total / Total Debt)
+  const bidRepresentativeness = (lanceTotal / totalDebt) * 100;
+
+  // New: Target calculations
+  const requiredTotalBidValue = totalDebt * (targetRepresentativenessPercent / 100);
+  const missingOwnResourcesValue = Math.max(0, requiredTotalBidValue - embeddedBidValue - ownResources);
   
   // Porto usually reduces the balance with the bid
   const remainingBalance = totalDebt - lanceTotal;
@@ -71,6 +80,9 @@ export function calculateConsorcio(params: ConsorcioParams): ConsorcioResult {
     embeddedBidValue,
     remainingBalanceAfterBid: remainingBalance,
     newInstallmentAfterBid,
+    bidRepresentativeness,
+    requiredTotalBidValue,
+    missingOwnResourcesValue,
   };
 }
 
