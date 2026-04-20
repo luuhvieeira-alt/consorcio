@@ -29,7 +29,7 @@ const DEFAULT_CONSORCIO: ConsorcioParams = {
   reserveFund: 2,
   insurance: 0.038,
   ownResources: 30000,
-  embeddedBid: 33750,
+  embeddedBidPercent: 30, // 30% representing approx 33750
   redutor: 45,
 };
 

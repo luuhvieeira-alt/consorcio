@@ -25,12 +25,101 @@ export default function PlannerView({ params, setParams, result }: PlannerViewPr
 
   return (
     <div className="space-y-8 pb-12">
-      <header>
+      {/* Proposal Header for Normal Display */}
+      <header className="no-print">
         <h2 className="text-3xl font-serif italic text-white tracking-tight">Simulador de Consórcio</h2>
         <p className="text-white/40 mt-1">Configure o plano ideal para o seu cliente.</p>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Professional Proposal for Printing */}
+      <div className="print-only proposal-page">
+        <div className="proposal-header text-center">
+          <h1 className="text-4xl font-serif italic text-black mb-2">PROPOSTA DE PLANEJAMENTO ESTRATÉGICO</h1>
+          <p className="text-gray-500 uppercase tracking-[0.3em] text-xs">Preparado exclusivamente para você</p>
+        </div>
+
+        <div className="mb-12">
+          <h2 className="text-2xl font-serif italic mb-6 border-b border-brand-primary pb-2">Por que este planejamento é sua melhor escolha?</h2>
+        <div className="grid grid-cols-2 gap-8 text-black mb-12">
+            <div className="space-y-4">
+              <p className="font-serif italic text-lg text-brand-primary">O Poder da Composição de Lances</p>
+              <p className="text-sm leading-relaxed text-gray-700">
+                Sua estratégia utiliza o **Lance Embutido**, permitindo que você use parte do próprio crédito contratado para potencializar suas chances de contemplação.
+              </p>
+              <div className="bg-gray-100 p-4 rounded border-l-4 border-brand-primary">
+                <p className="text-xs uppercase text-gray-500 font-bold mb-2">Composição do Lance Total</p>
+                <div className="flex justify-between text-sm mb-1">
+                  <span>Recurso Próprio (Seu Bolso):</span>
+                  <span className="font-bold">{formatCurrency(params.ownResources)}</span>
+                </div>
+                <div className="flex justify-between text-sm mb-1">
+                  <span>Lance Embutido ({params.embeddedBidPercent}%):</span>
+                  <span className="font-bold">{formatCurrency(result.embeddedBidValue)}</span>
+                </div>
+                <div className="flex justify-between text-md font-bold border-t border-gray-300 pt-2 mt-2">
+                  <span>LANCE FINAL PARA SORTEIO:</span>
+                  <span className="text-brand-primary">{formatCurrency(params.ownResources + result.embeddedBidValue)}</span>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <p className="font-serif italic text-lg text-brand-primary">Liberdade de Escolha</p>
+              <p className="text-sm leading-relaxed text-gray-700">
+                Este planejamento foi desenhado para que você tenha o **poder de compra à vista** no momento da contemplação, garantindo melhores negociações e descontos reais no imóvel ou veículo, enquanto seus concorrentes estão presos às taxas variáveis dos bancos.
+              </p>
+              <p className="text-xs text-gray-400 italic">
+                * Proposta sujeita a análise de crédito e disponibilidade de grupo.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-12 mb-12">
+          <div className="bg-gray-50 p-8 border border-gray-200">
+            <h3 className="text-xl font-serif italic mb-6">Detalhamento do Plano</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between border-b pb-2">
+                <span className="text-xs uppercase text-gray-500">Valor do Crédito</span>
+                <span className="font-serif italic text-lg">{formatCurrency(params.credit)}</span>
+              </div>
+              <div className="flex justify-between border-b pb-2">
+                <span className="text-xs uppercase text-gray-500">Prazo Total</span>
+                <span className="font-serif italic text-lg">{params.terms} meses</span>
+              </div>
+              <div className="flex justify-between border-b pb-2">
+                <span className="text-xs uppercase text-gray-500">Parcela Inicial</span>
+                <span className="font-serif italic text-lg text-brand-primary font-bold">{formatCurrency(result.totalInstallment)}</span>
+              </div>
+              <div className="flex justify-between border-b pb-2">
+                <span className="text-xs uppercase text-gray-500">Taxa Adm + Res.</span>
+                <span className="font-serif italic text-lg">{(params.admFee + params.reserveFund).toFixed(2)}%</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-center space-y-6">
+            <div className="border-l-4 border-brand-primary pl-6 py-2">
+              <p className="text-[10px] uppercase text-gray-500 tracking-widest">Expectativa de Contemplação</p>
+              <p className="text-lg text-gray-800 leading-tight">
+                Utilizando o lance embutido de <strong>{params.embeddedBidPercent}%</strong>, você maximiza suas chances mensais sem precisar desembolsar todo o valor do seu bolso.
+              </p>
+            </div>
+            <div className="border-l-4 border-brand-primary pl-6 py-2">
+              <p className="text-[10px] uppercase text-gray-500 tracking-widest">Resultado Pós-Contemplação</p>
+              <p className="text-lg text-gray-800 leading-tight">
+                Sua parcela será recalculada para aproximadamente <strong>{formatCurrency(result.newInstallmentAfterBid)}</strong>, mantendo sua saúde financeira intacta.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-center mt-20 p-12 bg-black text-white">
+          <p className="text-2xl font-serif italic mb-4">"A melhor forma de prever o futuro é criá-lo."</p>
+          <p className="text-xs uppercase tracking-widest opacity-60">Vamos garantir seu patrimônio hoje?</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 no-print">
         {/* Configuration Column */}
         <div className="lg:col-span-2 space-y-6">
           <section className="bg-dark-elevated rounded-2xl border border-dark-border overflow-hidden">
@@ -90,11 +179,17 @@ export default function PlannerView({ params, setParams, result }: PlannerViewPr
                 type="currency"
               />
               <InputField 
-                label="Lance Embutido (Crédito)" 
-                value={params.embeddedBid} 
-                onChange={(v) => handleChange('embeddedBid', v)} 
-                type="currency"
+                label="Lance Embutido (%)" 
+                value={params.embeddedBidPercent} 
+                onChange={(v) => handleChange('embeddedBidPercent', v)} 
+                type="percent"
               />
+            </div>
+            <div className="px-6 pb-6 pt-2">
+              <div className="p-3 bg-brand-primary/5 border border-brand-primary/20 rounded-xl flex items-center justify-between">
+                <span className="text-[10px] text-brand-primary font-bold uppercase tracking-widest">Valor do Lance Embutido:</span>
+                <span className="text-sm font-serif italic text-white">{formatCurrency(result.embeddedBidValue)}</span>
+              </div>
             </div>
           </section>
         </div>
@@ -144,12 +239,12 @@ export default function PlannerView({ params, setParams, result }: PlannerViewPr
               <div className="space-y-2">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-white/40 uppercase tracking-widest text-[10px]">Lance Total</span>
-                  <span className="text-white font-serif italic">{formatCurrency(params.ownResources + params.embeddedBid)}</span>
+                  <span className="text-white font-serif italic">{formatCurrency(params.ownResources + result.embeddedBidValue)}</span>
                 </div>
                 <div className="flex justify-between items-center text-[10px]">
                   <span className="text-white/20 uppercase tracking-widest">Percentual do Lance</span>
                   <span className="text-brand-primary/60 font-serif italic">
-                    {((params.ownResources + params.embeddedBid) / params.credit * 100).toFixed(2)}%
+                    {((params.ownResources + result.embeddedBidValue) / params.credit * 100).toFixed(2)}%
                   </span>
                 </div>
                 <div className="flex justify-between items-center text-sm pt-2 border-t border-white/5 mt-2">
@@ -190,6 +285,11 @@ function InputField({ label, value, onChange, type = 'number', step = 1 }: any) 
         {type === 'currency' && (
           <div className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 font-sans text-xs pointer-events-none">
             R$
+          </div>
+        )}
+        {type === 'percent' && (
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 font-sans text-xs pointer-events-none">
+            %
           </div>
         )}
       </div>

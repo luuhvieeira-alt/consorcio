@@ -17,10 +17,90 @@
   body {
     @apply bg-dark-surface text-slate-300 font-sans antialiased;
   }
+}
 
-  h1, h2, h3, h4 {
-    @apply font-serif italic;
+/* Print Styles */
+@media print {
+  body {
+    background: white !important;
+    color: #1a1a1a !important;
+    font-size: 12pt;
   }
+
+  /* Hide UI elements */
+  aside, 
+  nav, 
+  button, 
+  .no-print {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  /* Reset dark surfaces for print */
+  .bg-dark-surface, .bg-dark-elevated, .bg-black\/40 {
+    background: white !important;
+    border-color: #eee !important;
+    color: #1a1a1a !important;
+  }
+
+  .text-white, .text-neutral-100 {
+    color: #1a1a1a !important;
+  }
+  
+  .text-brand-primary {
+    color: #d97706 !important;
+  }
+
+  .border-white\/5, .border-dark-border {
+    border-color: #eee !important;
+  }
+
+  .bg-white\/5 {
+    background: #f9f9f9 !important;
+  }
+
+  .rounded-2xl, .rounded-xl {
+    border-radius: 4px !important;
+    border-width: 1px !important;
+  }
+
+  .shadow-lg, .shadow-2xl {
+    box-shadow: none !important;
+  }
+
+  /* Proposal specific formatting */
+  .proposal-page {
+    page-break-after: always;
+    padding: 2cm;
+  }
+
+  .proposal-header {
+    margin-bottom: 2cm;
+    border-bottom: 2px solid #d97706;
+    padding-bottom: 1cm;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .grid {
+    display: block !important;
+  }
+
+  .grid > * {
+    margin-bottom: 1cm;
+  }
+}
+
+.print-only {
+  display: none;
 }
 
 /* Custom scrollbar for dark theme */

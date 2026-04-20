@@ -5,7 +5,7 @@ export interface ConsorcioParams {
   reserveFund: number;
   insurance: number; // monthly %
   ownResources: number;
-  embeddedBid: number;
+  embeddedBidPercent: number; // percentage of credit
   redutor: number; // % reduction in installment
 }
 
@@ -24,6 +24,7 @@ export interface ConsorcioResult {
   totalDebt: number;
   totalPaid: number;
   effectiveCredit: number;
+  embeddedBidValue: number;
   remainingBalanceAfterBid: number;
   newInstallmentAfterBid: number;
 }
@@ -35,7 +36,7 @@ export interface FinancingResult {
 }
 
 export function calculateConsorcio(params: ConsorcioParams): ConsorcioResult {
-  const { credit, terms, admFee, reserveFund, insurance, ownResources, embeddedBid, redutor } = params;
+  const { credit, terms, admFee, reserveFund, insurance, ownResources, embeddedBidPercent, redutor } = params;
 
   const totalAdminFee = (credit * (admFee / 100));
   const totalReserveFund = (credit * (reserveFund / 100));
@@ -49,8 +50,9 @@ export function calculateConsorcio(params: ConsorcioParams): ConsorcioResult {
   const totalDebt = credit + totalAdminFee + totalReserveFund;
   
   // After bid
-  const effectiveCredit = credit - embeddedBid;
-  const lanceTotal = ownResources + embeddedBid;
+  const embeddedBidValue = credit * (embeddedBidPercent / 100);
+  const effectiveCredit = credit - embeddedBidValue;
+  const lanceTotal = ownResources + embeddedBidValue;
   
   // Porto usually reduces the balance with the bid
   const remainingBalance = totalDebt - lanceTotal;
@@ -66,6 +68,7 @@ export function calculateConsorcio(params: ConsorcioParams): ConsorcioResult {
     totalDebt,
     totalPaid: totalDebt + (insuranceValue * terms),
     effectiveCredit,
+    embeddedBidValue,
     remainingBalanceAfterBid: remainingBalance,
     newInstallmentAfterBid,
   };
